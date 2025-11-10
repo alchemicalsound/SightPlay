@@ -22,11 +22,11 @@
       background: rgba(139, 139, 139, 0.4);
       border: 1px solid rgba(148,163,184,.2);
       border-radius: 1rem;
-      padding: 1rem 1.25rem;
+      padding: .3rem 1.25rem;
       width: min(540px, 100%);
       display: flex;
       flex-direction: column;
-      gap: .6rem;
+      gap: .1rem;
     }
     .selectors-grid {
       display: grid;
@@ -126,12 +126,10 @@
       align-items: center;
     }
 
-    /* contenedor del panel de opciones abajo */
     .options-panel {
       width: min(540px, 100%);
     }
 
-    /* panel de donaciones desplegable */
     .donate-panel {
       width: min(540px, 100%);
       margin-top: .5rem;
@@ -157,7 +155,6 @@
       margin-top: .3rem;
     }
 
-    /* sliders gris oscuro */
     input[type="range"] {
       -webkit-appearance: none;
       background: transparent;
@@ -190,7 +187,6 @@
       border: none;
     }
 
-    /* flechas de rango */
     .range-inline {
       display: flex;
       gap: .3rem;
@@ -208,36 +204,53 @@
       cursor: pointer;
     }
 
-    /* contenedor del diapasón + afinación */
+    /* diapasón columna izquierda */
     #fretboardBox {
       margin-top: .5rem;
       background: rgba(15,23,42,.1);
       border-radius: .5rem;
-      display: none; /* se muestra sólo con guitarra */
+      display: none;
       position: relative;
-      width: 520px;
+      width: 580px;
+      padding-left: 70px; /* OFFSET de columna izquierda */
+      box-sizing: content-box;
     }
     #fretboard {
       display: block;
     }
-    #fretTuners {
+    #fretLeftCol {
       position: absolute;
-      left: -15px;
-      top: 0;
-      bottom: 0;
-      pointer-events: none;
+      top: 6px;
+      left: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      pointer-events: auto;
+    }
+    #fretTuners {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
     .string-tuner {
-      position: absolute;
-      left: -15px;
-      width: 38px;
+      width: 54px;
       background: #1f2937;
       border: 1px solid rgba(148,163,184,.35);
       color: #e2e8f0;
-      font-size: .5rem;
+      font-size: .55rem;
       border-radius: .25rem;
       padding: 0 .15rem;
-      pointer-events: auto;
+    }
+    #fretWidthBtn {
+      background: rgba(15,23,42,.6);
+      border: 1px solid rgba(148,163,184,.4);
+      border-radius: .35rem;
+      padding: .2rem .4rem;
+      font-size: .55rem;
+      cursor: pointer;
+      width: 54px;
+      text-align: center;
     }
 
     .bpm-box {
@@ -263,7 +276,7 @@
   <div class="subtitle">By lALO</div>
 
   <div class="card">
-    <div id="status" class="status mid" style="margin-top:.3rem;">Pidiendo micrófono…</div>
+    <div id="status" class="status mid" style="margin-top:.1rem;">Pidiendo micrófono…</div>
     <p class="small" id="progress">0 / 0</p>
     <p class="small" id="studyInfo">Tiempo de estudio: 00:00 | Ejercicios completados: 0</p>
   </div>
@@ -272,9 +285,11 @@
     <canvas id="staff" width="520" height="160"></canvas>
   </div>
 
-  <!-- nuevo: diapasón con afinación editable -->
   <div id="fretboardBox">
-    <div id="fretTuners"></div>
+    <div id="fretLeftCol">
+      <div id="fretTuners"></div>
+      <button id="fretWidthBtn" title="Cambiar ancho del diapasón">⇆</button>
+    </div>
     <canvas id="fretboard" width="520" height="110"></canvas>
   </div>
 
@@ -283,7 +298,7 @@
     <button id="playBtn">▶︎ Reproducir</button>
     <button id="prevBtn">◀ Nota</button>
     <button id="startBtn">⟲ Inicio</button>
-    <button id="loopBtn">Loop off</button>
+    <button id="loopBtn">Loop: off</button>
     <div class="bpm-box">
       BPM
       <input id="bpmInput" type="number" min="40" max="220" value="115">
@@ -292,7 +307,6 @@
     <button id="toggleDonateBtn" class="opt-btn" style="background:rgba(255,255,255,.05);">♥ Donate</button>
   </div>
 
-  <!-- panel de opciones abajo -->
   <div class="options-panel">
     <div class="selectors-grid hidden" id="selectorsGrid">
       <div>
@@ -344,7 +358,6 @@
           <button class="opt-btn" data-value="4">5°</button>
         </div>
       </div>
-      <!-- rango permitido con flechas -->
       <div>
         <div class="group-label">Rango permitido</div>
         <div class="small">Grave:</div>
@@ -381,18 +394,21 @@
           </div>
         </div>
       </div>
-
-      <!-- valores / silencios -->
       <div>
         <div class="group-label">Valores / silencios</div>
+        <!-- NUEVO: botones de valor -->
+        <div class="compact-row" id="noteValuesGroup" style="margin-bottom:.35rem;">
+          <button class="opt-btn active" data-value="q" title="Negra">♩</button>
+          <button class="opt-btn active" data-value="qr" title="Silencio de negra">𝄽</button>
+          <button class="opt-btn" data-value="h" title="Blanca">𝅗𝅥</button>
+          <button class="opt-btn" data-value="hr" title="Silencio de blanca">𝄺</button>
+        </div>
         <div class="small">Prob. silencio</div>
         <div class="gate-inline" style="margin-top:.15rem;">
           <input id="restProb" type="range" min="0" max="1" step="0.05" value="0">
           <span class="small" id="restProbVal">0%</span>
         </div>
       </div>
-
-      <!-- armonía -->
       <div>
         <div class="group-label">Armonía</div>
         <div class="compact-row" id="harmGroup">
@@ -412,7 +428,6 @@
         <div class="small" style="margin-top:.35rem;">Bloqueo</div>
         <button id="harmLockBtn" class="opt-btn" style="margin-top:.2rem;">Bloq armonía</button>
       </div>
-
       <div>
         <div class="group-label">Noise gate</div>
         <div class="gate-inline">
@@ -429,28 +444,21 @@
     </div>
   </div>
 
-  <!-- panel DONATE (desplegable) -->
   <div class="donate-panel hidden" id="donatePanel">
     <div class="card">
       <h2 style="font-size:.85rem; margin-top:0; margin-bottom:.4rem;">Apoya este proyecto 💛</h2>
-
-      <!-- PayPal.Me -->
       <p class="small" style="margin-bottom:.35rem;">Si te sirvió, puedes invitarme un café en PayPal:</p>
       <a href="https://paypal.me/RossAbotManager" target="_blank"
          style="display:inline-block;background:#0070ba;color:#fff;padding:6px 12px;border-radius:6px;
                 text-decoration:none;font-size:.7rem;font-weight:600;">
         Donar con PayPal
       </a>
-
-      <!-- QR CoDi -->
-<div style="margin-top:.7rem; text-align:center;">
-  <p class="small" style="margin-bottom:.35rem;">Pago/propina en México (CoDi):</p>
-  <img src="codi-qr.jpg"
-       alt="QR CoDi"
-       style="width:180px; height:auto; border-radius:.5rem; background:#1f2937; display:inline-block;">
-</div>
-
-      <!-- Transferencia -->
+      <div style="margin-top:.7rem; text-align:center;">
+        <p class="small" style="margin-bottom:.35rem;">Pago/propina en México (CoDi):</p>
+        <img src="codi-qr.jpg"
+             alt="QR CoDi"
+             style="width:180px; height:auto; border-radius:.5rem; background:#1f2937; display:inline-block;">
+      </div>
       <div style="margin-top:.7rem;">
         <p class="small" style="margin-bottom:.15rem;">Transferencia bancaria directa:</p>
         <p style="font-size:.65rem; line-height:1.3;">
@@ -463,7 +471,6 @@
   </div>
 
   <script>
-    // ====== CONFIG ======
     const scales = {
       "C": ["C","D","E","F","G","A","B"],
       "G": ["G","A","B","C","D","E","F#"],
@@ -477,7 +484,14 @@
     const STORAGE_KEY = "sightplay_prefs_v2";
     const METER_MAX_RMS = 0.05;
 
-    // nueva imagen de silencio
+    // OFFSETS DIAPASÓN
+    const FRET_LEFT_COLUMN_WIDTH = 70;
+    const FRET_CANVAS_LEFT_PAD   = 58;
+    const FRET_CANVAS_RIGHT_PAD  = 15;
+    const FRETBOARD_WIDTHS       = [520, 620, 740];
+    let fretboardWidthIndex = 0;
+    let fretboardWidth = FRETBOARD_WIDTHS[fretboardWidthIndex];
+
     const restImg = new Image();
     restImg.src = "silence_negra.png";
     let restImgLoaded = false;
@@ -486,7 +500,6 @@
       drawAllBars();
     };
 
-    // lista de notas para rango
     const RANGE_NOTES = [];
     (function buildRange() {
       const names = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -513,7 +526,6 @@
     let noiseGate = 0.01;
     let reverbLevel = 0.3;
 
-    // rango por slider
     let currentMinRangeIdx = findRangeIndex("C3");
     let currentMaxRangeIdx = findRangeIndex("C6");
 
@@ -536,6 +548,14 @@
     let currentBpm = 115;
     let loopMode = false;
 
+    // NUEVO: valores permitidos
+    let allowedNoteValues = {
+      q: true,   // negra
+      qr: true,  // silencio de negra
+      h: false,  // blanca
+      hr: false  // silencio de blanca
+    };
+
     const statusEl = document.getElementById("status");
     const progressEl = document.getElementById("progress");
     const studyInfoEl = document.getElementById("studyInfo");
@@ -545,6 +565,7 @@
     const fretCtx = fretCanvas.getContext("2d");
     const fretboardBox = document.getElementById("fretboardBox");
     const fretTuners = document.getElementById("fretTuners");
+    const fretWidthBtn = document.getElementById("fretWidthBtn");
     const muteBtn = document.getElementById("muteBtn");
     const playBtn = document.getElementById("playBtn");
     const prevBtn = document.getElementById("prevBtn");
@@ -576,6 +597,7 @@
     const restProb = document.getElementById("restProb");
     const restProbVal = document.getElementById("restProbVal");
     const harmLockBtn = document.getElementById("harmLockBtn");
+    const noteValuesGroup = document.getElementById("noteValuesGroup");
 
     let advancing = false;
     let micEnabled = true;
@@ -587,10 +609,8 @@
     let reverbGain = null;
     let reverbLowpass = null;
 
-    // nuevo: para controlar avance automático de silencios
     let restAdvanceTimer = null;
 
-    // claves
     const clefImgs = { treble: new Image(), bass: new Image() };
     clefImgs.treble.src = "clef_treble.png";
     clefImgs.bass.src = "clef_bass.png";
@@ -606,20 +626,9 @@
     const STAFF_CONTENT_START = 120;
     const BASE_CANVAS_HEIGHT = 160;
 
-    // guitarra base
-    const GUITAR_STRINGS = [
-      {name: "E2", midi: 40},
-      {name: "A2", midi: 45},
-      {name: "D3", midi: 50},
-      {name: "G3", midi: 55},
-      {name: "B3", midi: 59},
-      {name: "E4", midi: 64}
-    ];
-    // afinación editable
-    const DEFAULT_GUITAR_TUNING = ["E3","A3","D4","G4","B4","E5"];
+    const DEFAULT_GUITAR_TUNING = ["E5","B4","G4","D4","A3","E3"];
     let currentGuitarTuning = [...DEFAULT_GUITAR_TUNING];
 
-    // notas que se podrán elegir en cada cuerda
     const TUNING_NOTES = [];
     (function buildTuningNotes() {
       const names = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -630,7 +639,6 @@
       }
     })();
 
-    // ahora solo 12 trastes
     const MAX_FRETS = 12;
 
     setInterval(() => {
@@ -668,7 +676,9 @@
         restProbability,
         currentBpm,
         loopMode,
-        guitarTuning: currentGuitarTuning
+        guitarTuning: currentGuitarTuning,
+        fretboardWidthIndex,
+        allowedNoteValues
       };
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
     }
@@ -676,7 +686,7 @@
     function updateFretboardVisibility() {
       if (currentInstrument === "guitar") {
         fretboardBox.style.display = "block";
-        drawFretboard(currentMelody[currentIndex] || null);
+        applyFretboardWidth();
       } else {
         fretboardBox.style.display = "none";
         fretCtx.clearRect(0,0,fretCanvas.width,fretCanvas.height);
@@ -697,7 +707,7 @@
       act("tsGroup", data.currentTimeSig);
       act("keyGroup", data.currentKey);
       act("stepGroup", String(data.currentMaxStep));
-      act("degGroup", String(data.currentAlterDegree));
+      act("degGroup", data.currentAlterDegree);
       act("accTypeGroup", data.currentAlterType);
       act("harmGroup", data.harmonyEnabled ? "on" : "off");
 
@@ -747,9 +757,27 @@
       bpmInput.value = currentBpm;
 
       loopMode = data.loopMode ?? false;
-      loopBtn.textContent = loopMode ? "Loop on" : "Loop off";
+      loopBtn.textContent = loopMode ? "Loop: on" : "Loop: off";
 
       currentGuitarTuning = data.guitarTuning ?? [...DEFAULT_GUITAR_TUNING];
+
+      fretboardWidthIndex = data.fretboardWidthIndex ?? 0;
+      if (fretboardWidthIndex < 0 || fretboardWidthIndex >= FRETBOARD_WIDTHS.length) {
+        fretboardWidthIndex = 0;
+      }
+      fretboardWidth = FRETBOARD_WIDTHS[fretboardWidthIndex];
+
+      // valores permitidos
+      if (data.allowedNoteValues) {
+        allowedNoteValues = data.allowedNoteValues;
+      }
+      if (noteValuesGroup) {
+        noteValuesGroup.querySelectorAll(".opt-btn").forEach(btn => {
+          const v = btn.dataset.value;
+          if (allowedNoteValues[v]) btn.classList.add("active");
+          else btn.classList.remove("active");
+        });
+      }
 
       updateFretboardVisibility();
     }
@@ -778,7 +806,9 @@
             restProbability,
             currentBpm,
             loopMode,
-            guitarTuning: currentGuitarTuning
+            guitarTuning: currentGuitarTuning,
+            fretboardWidthIndex,
+            allowedNoteValues
           });
           return;
         }
@@ -803,6 +833,12 @@
         currentBpm = data.currentBpm ?? currentBpm;
         loopMode = data.loopMode ?? loopMode;
         currentGuitarTuning = data.guitarTuning ?? [...DEFAULT_GUITAR_TUNING];
+        fretboardWidthIndex = data.fretboardWidthIndex ?? 0;
+        if (fretboardWidthIndex < 0 || fretboardWidthIndex >= FRETBOARD_WIDTHS.length) {
+          fretboardWidthIndex = 0;
+        }
+        fretboardWidth = FRETBOARD_WIDTHS[fretboardWidthIndex];
+        allowedNoteValues = data.allowedNoteValues ?? allowedNoteValues;
         applySettingsToUI(data);
       } catch(e) {}
     }
@@ -832,15 +868,34 @@
     }
 
     toggleMenuBtn.addEventListener("click", () => {
-      selectorsGrid.classList.toggle("hidden");
+      const isHidden = selectorsGrid.classList.toggle("hidden");
+      if (!isHidden) {
+        donatePanel.classList.add("hidden");
+      }
       lastActiveTime = Date.now();
       saveSettings();
     });
 
-    // toggle DONATE
     toggleDonateBtn.addEventListener("click", () => {
-      donatePanel.classList.toggle("hidden");
+      const isHidden = donatePanel.classList.toggle("hidden");
+      if (!isHidden) {
+        selectorsGrid.classList.add("hidden");
+      }
     });
+
+    // nota: botones de valores (multi toggle)
+    if (noteValuesGroup) {
+      noteValuesGroup.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("opt-btn")) return;
+        const val = e.target.dataset.value;
+        const newState = !allowedNoteValues[val];
+        allowedNoteValues[val] = newState;
+        if (newState) e.target.classList.add("active");
+        else e.target.classList.remove("active");
+        saveSettings();
+        loadNewMelody();
+      });
+    }
 
     harmDensityInput.addEventListener("input", () => {
       harmonyDensity = parseFloat(harmDensityInput.value);
@@ -848,7 +903,8 @@
       lastActiveTime = Date.now();
       saveSettings();
       if (harmonyEnabled && !harmonyLocked) {
-        currentChords = generateHarmonyForMelody(currentMelody);
+        const hm = asHarmonyMelody(currentMelody);
+        currentChords = generateHarmonyForMelody(hm);
         drawAllBars();
       }
     });
@@ -859,7 +915,8 @@
       lastActiveTime = Date.now();
       saveSettings();
       if (harmonyEnabled && !harmonyLocked) {
-        currentChords = generateHarmonyForMelody(currentMelody);
+        const hm = asHarmonyMelody(currentMelody);
+        currentChords = generateHarmonyForMelody(hm);
         drawAllBars();
       }
     });
@@ -891,7 +948,8 @@
       else {
         harmLockBtn.classList.remove("active");
         if (harmonyEnabled) {
-          currentChords = generateHarmonyForMelody(currentMelody);
+          const hm = asHarmonyMelody(currentMelody);
+          currentChords = generateHarmonyForMelody(hm);
           drawAllBars();
         }
       }
@@ -984,7 +1042,8 @@
       harmonyEnabled = (v === "on");
       if (harmonyEnabled) {
         if (!harmonyLocked || !currentChords.length) {
-          currentChords = generateHarmonyForMelody(currentMelody);
+          const hm = asHarmonyMelody(currentMelody);
+          currentChords = generateHarmonyForMelody(hm);
         }
       } else {
         currentChords = [];
@@ -999,14 +1058,10 @@
       const h = Math.max(minHeight, staffCanvas.height || BASE_CANVAS_HEIGHT);
       staffCanvas.width = newW;
       staffCanvas.height = h;
-      fretCanvas.width = newW;
-      if (fretboardBox) {
-        fretboardBox.style.width = newW + "px";
-      }
     }
 
     function noteStrToDiatonic(n) {
-      const m = n.match(/^([A-G])([#b]?)(\d)$/);
+      const m = n && typeof n === "string" ? n.match(/^([A-G])([#b]?)(\d)$/) : null;
       if (!m) return null;
       const letter = m[1];
       const oct = parseInt(m[3], 10);
@@ -1052,10 +1107,49 @@
       return notes;
     }
 
+    // helper para escoger siguiente nota diatónica con preferencia a conjunto
+    function pickNextPitchIndex(prevIndex, available, maxStep, minDia, maxDia) {
+      const minIdx = Math.max(prevIndex - maxStep, 0);
+      const maxIdx = Math.min(prevIndex + maxStep, available.length - 1);
+      const candidates = [];
+      for (let d = 1; d <= maxStep; d++) {
+        if (prevIndex - d >= minIdx) candidates.push({ idx: prevIndex - d, interval: d });
+        if (prevIndex + d <= maxIdx) candidates.push({ idx: prevIndex + d, interval: d });
+      }
+      let candidateIdx = prevIndex;
+      if (candidates.length) {
+        const stepCands = candidates.filter(c => c.interval === 1);
+        const otherCands = candidates.filter(c => c.interval > 1);
+        const STEP_DOMINANCE = 0.6;
+        let chosen = null;
+        const r = Math.random();
+        if (stepCands.length && (r < STEP_DOMINANCE || !otherCands.length)) {
+          chosen = stepCands[Math.floor(Math.random() * stepCands.length)];
+        } else if (otherCands.length) {
+          let totalW = 0;
+          for (const c of otherCands) totalW += 1 / c.interval;
+          let pick = Math.random() * totalW;
+          for (const c of otherCands) {
+            const w = 1 / c.interval;
+            if (pick < w) { chosen = c; break; }
+            pick -= w;
+          }
+          if (!chosen) chosen = otherCands[otherCands.length - 1];
+        }
+        if (chosen) candidateIdx = chosen.idx;
+      }
+      const candDia = noteStrToDiatonic(available[candidateIdx]);
+      if (candDia < minDia || candDia > maxDia) {
+        candidateIdx = prevIndex;
+      }
+      return candidateIdx;
+    }
+
+    // GENERADOR con soporte de negras/blancas + modo solo blancas
     function generateMelody(maxStep) {
       const {minDia, maxDia} = getAllowedRange();
-      const notesPerBar = currentTimeSig === "3/4" ? 3 : 4;
-      const totalNotes = currentBars * notesPerBar;
+      const beatsPerBar = currentTimeSig === "3/4" ? 3 : 4;
+      const totalBeats = currentBars * beatsPerBar;
       const available = buildAvailableNotes(getCurrentScale(), minDia, maxDia);
       if (!available.length) return [];
 
@@ -1067,32 +1161,92 @@
         if (startIndex > available.length - 1) startIndex = available.length - 1;
       }
 
-      const melody = [ Math.random() < restProbability ? "R" : available[startIndex] ];
-      let prevIndex = startIndex;
+      // modo SOLO blancas: negras apagadas, blancas encendidas
+      if (!allowedNoteValues.q && allowedNoteValues.h) {
+        const melody = new Array(totalBeats).fill(null);
+        let prevIndex = startIndex;
+        for (let bar = 0; bar < currentBars; bar++) {
+          const barStart = bar * beatsPerBar;
+          const wantRest1 = allowedNoteValues.hr && Math.random() < restProbability;
+          if (wantRest1) {
+            melody[barStart] = { t: "hr" };
+          } else {
+            const candIdx = pickNextPitchIndex(prevIndex, available, maxStep, minDia, maxDia);
+            melody[barStart] = { t: "hn", note: available[candIdx] };
+            prevIndex = candIdx;
+          }
+          melody[barStart + 1] = { t: "cont" };
 
-      for (let i = 1; i < totalNotes; i++) {
-        if (Math.random() < restProbability) {
-          melody.push("R");
+          const remaining = beatsPerBar - 2;
+          if (remaining >= 2) {
+            const pos = barStart + 2;
+            const wantRest2 = allowedNoteValues.hr && Math.random() < restProbability;
+            if (wantRest2) {
+              melody[pos] = { t: "hr" };
+            } else {
+              const candIdx2 = pickNextPitchIndex(prevIndex, available, maxStep, minDia, maxDia);
+              melody[pos] = { t: "hn", note: available[candIdx2] };
+              prevIndex = candIdx2;
+            }
+            melody[pos + 1] = { t: "cont" };
+          } else if (remaining === 1) {
+            melody[barStart + 2] = allowedNoteValues.qr ? "R" : (available[prevIndex] || "R");
+          }
+        }
+        return melody;
+      }
+
+      // modo normal con negras
+      const melody = new Array(totalBeats).fill(null);
+      let prevIndex = startIndex;
+      for (let beat = 0; beat < totalBeats; beat++) {
+        if (melody[beat] !== null) continue;
+
+        const posInBar = beat % beatsPerBar;
+        const beatsLeft = beatsPerBar - posInBar;
+        const canHalf = allowedNoteValues.h && beatsLeft >= 2;
+        const wantRest = Math.random() < restProbability;
+
+        // intentamos blanca
+        if (canHalf && Math.random() < 0.25) {
+          if (wantRest && allowedNoteValues.hr) {
+            melody[beat] = { t: "hr" };
+          } else {
+            const candIdx = pickNextPitchIndex(prevIndex, available, maxStep, minDia, maxDia);
+            melody[beat] = { t: "hn", note: available[candIdx] };
+            prevIndex = candIdx;
+          }
+          melody[beat + 1] = { t: "cont" };
           continue;
         }
-        const minIdx = Math.max(prevIndex - maxStep, 0);
-        const maxIdx = Math.min(prevIndex + maxStep, available.length - 1);
-        const span = maxIdx - minIdx + 1;
-        let candidateIdx;
-        if (span <= 2) {
-          candidateIdx = minIdx + Math.floor(Math.random() * span);
+
+        // negra / silencio de negra
+        if (wantRest && allowedNoteValues.qr) {
+          melody[beat] = "R";
+        } else if (allowedNoteValues.q) {
+          const candIdx = pickNextPitchIndex(prevIndex, available, maxStep, minDia, maxDia);
+          melody[beat] = available[candIdx];
+          prevIndex = candIdx;
         } else {
-          const r = Math.random();
-          if (r < 0.33) candidateIdx = maxIdx;
-          else if (r < 0.66) candidateIdx = minIdx;
-          else candidateIdx = minIdx + Math.floor(Math.random() * span);
+          // si no hay negra permitida, cae en blanco mínimo
+          melody[beat] = "R";
         }
-        const candDia = noteStrToDiatonic(available[candidateIdx]);
-        if (candDia < minDia || candDia > maxDia) {
-          candidateIdx = prevIndex;
+      }
+
+      return melody;
+    }
+
+    // fusión de dos silencios de negra en uno de blanca
+    function mergeQuarterRestsToHalf(melody) {
+      const beatsPerBar = currentTimeSig === "3/4" ? 3 : 4;
+      for (let i = 0; i < melody.length - 1; i++) {
+        const posInBar = i % beatsPerBar;
+        if (posInBar < beatsPerBar - 1) {
+          if (melody[i] === "R" && melody[i+1] === "R") {
+            melody[i] = { t: "hr" };
+            melody[i+1] = { t: "cont" };
+          }
         }
-        melody.push(available[candidateIdx]);
-        prevIndex = candidateIdx;
       }
       return melody;
     }
@@ -1106,6 +1260,14 @@
       const baseKeyAcc = baseDegName.includes("#") ? "#" : (baseDegName.includes("b") ? "b" : "");
 
       return melody.map(n => {
+        if (!n) return n;
+        if (typeof n === "object") {
+          if (n.t === "hn" && n.note) {
+            const modified = applyAccidentalsToMelody([n.note])[0];
+            return { ...n, note: modified };
+          }
+          return n;
+        }
         if (n === "R") return n;
         const m = n.match(/^([A-G])([#b]?)(\d)$/);
         if (!m) return n;
@@ -1131,7 +1293,7 @@
       });
     }
 
-    // ====== HARMONÍA ======
+    // --- armonía, igual que antes ---
     const NOTE_TO_SEMITONE = {
       "C":0, "C#":1, "Db":1, "D":2, "D#":3, "Eb":3, "E":4,
       "F":5, "F#":6, "Gb":6, "G":7, "G#":8, "Ab":8, "A":9,
@@ -1147,12 +1309,12 @@
     }
 
     function baseName(n) {
-      const m = n.match(/^([A-G][#b]?)/);
+      const m = n && typeof n === "string" ? n.match(/^([A-G][#b]?)/) : null;
       return m ? m[1] : n;
     }
 
     function parseNoteParts(noteStr) {
-      const m = noteStr.match(/^([A-G])([#b]?)(\d)$/);
+      const m = noteStr && typeof noteStr === "string" ? noteStr.match(/^([A-G])([#b]?)(\d)$/) : null;
       if (!m) return null;
       return { letter: m[1], acc: m[2] || "", oct: parseInt(m[3],10) };
     }
@@ -1327,7 +1489,6 @@
       for (let i = 0; i < melody.length; i++) {
         const note = melody[i];
         const posInBar = i % notesPerBar;
-
         const midPos = (notesPerBar === 4) ? 2 : 2;
         const isStrong = posInBar === 0;
         const isMid = posInBar === midPos;
@@ -1379,6 +1540,7 @@
         }
       }
 
+      // asegurar un acorde al inicio de cada compás
       const totalBars = currentBars;
       for (let b = 0; b < totalBars; b++) {
         const start = b * notesPerBar;
@@ -1409,6 +1571,20 @@
       }
 
       return result;
+    }
+
+    // convierte arreglo con objetos a uno solo de nombres/rest para armonía
+    function asHarmonyMelody(mel) {
+      return mel.map(entry => {
+        if (!entry) return "R";
+        if (typeof entry === "string") {
+          return entry;
+        }
+        if (entry.t === "hn") return entry.note;
+        if (entry.t === "hr") return "R";
+        if (entry.t === "cont") return "R";
+        return "R";
+      });
     }
 
     function generateMelodyFromLockedHarmony(chordsArr) {
@@ -1479,6 +1655,7 @@
       } else {
         melody = generateMelody(currentMaxStep);
         melody = applyAccidentalsToMelody(melody);
+        melody = mergeQuarterRestsToHalf(melody);
       }
 
       currentMelody = melody;
@@ -1488,9 +1665,10 @@
 
       if (harmonyEnabled) {
         if (harmonyLocked && currentChords.length) {
-          // dejamos la armonía existente
+          // mantener armonía
         } else {
-          currentChords = generateHarmonyForMelody(currentMelody);
+          const hm = asHarmonyMelody(currentMelody);
+          currentChords = generateHarmonyForMelody(hm);
         }
       } else {
         currentChords = [];
@@ -1502,7 +1680,7 @@
 
     function noteToY(noteStr) {
       if (noteStr === "R") return staffBottomY;
-      const m = noteStr.match(/^([A-G])([b#]?)(\d)$/);
+      const m = noteStr && typeof noteStr === "string" ? noteStr.match(/^([A-G])([b#]?)(\d)$/) : null;
       if (!m) return staffBottomY;
       const letter = m[1];
       const oct = parseInt(m[3], 10);
@@ -1636,7 +1814,7 @@
       }
     }
 
-    function drawRest(x, y) {
+    function drawQuarterRest(x) {
       const baseY = topLineY + 20;
       if (restImgLoaded) {
         const w = 10;
@@ -1661,6 +1839,14 @@
       ctx.fill();
     }
 
+    function drawHalfRest(x) {
+      const y = topLineY + 10; // sobre la línea 3 en clave de sol
+      const w = 14;
+      const h = 5;
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fillRect(x - w/2, y - h/2, w, h);
+    }
+
     function drawNoteHead(x, y, color) {
       if (color === undefined) color = "#e2e8f0";
       drawLedgerLinesForY(x, y);
@@ -1682,14 +1868,36 @@
       ctx.stroke();
     }
 
+    function drawHalfNote(x, y, color) {
+      if (color === undefined) color = "#e2e8f0";
+      drawLedgerLinesForY(x, y);
+      ctx.beginPath();
+      ctx.ellipse(x, y, 7, 5, -0.3, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+      const stemRefY = currentClef === "treble" ? noteToY("B4") : noteToY("D3");
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      if (y < stemRefY) {
+        ctx.moveTo(x - 6, y);
+        ctx.lineTo(x - 6, y + 35);
+      } else {
+        ctx.moveTo(x + 6, y);
+        ctx.lineTo(x + 6, y - 35);
+      }
+      ctx.stroke();
+    }
+
     function drawAllBars(activeOverrideIdx = null, triangleOverrideIdx = null) {
       const rightLimit = staffCanvas.width - 20;
       const availableWidth = rightLimit - STAFF_CONTENT_START;
       const barWidth = availableWidth / currentBars;
       const innerPadding = 14;
-      const notesPerBar = currentTimeSig === "3/4" ? 3 : 4;
+      const beatsPerBar = currentTimeSig === "3/4" ? 3 : 4;
       const noteArea = barWidth - innerPadding * 2;
-      const noteStep = noteArea / notesPerBar;
+      const noteStep = noteArea / beatsPerBar;
 
       const positions = [];
       let maxNoteY = staffBottomY;
@@ -1697,16 +1905,41 @@
       const barAccidentals = Array.from({length: currentBars}, () => ({}));
 
       for (let i = 0; i < currentMelody.length; i++) {
-        const barIndex = Math.floor(i / notesPerBar);
-        const posInBar = i % notesPerBar;
+        const barIndex = Math.floor(i / beatsPerBar);
+        const posInBar = i % beatsPerBar;
         const barLeft = STAFF_CONTENT_START + barIndex * barWidth;
         const x = barLeft + innerPadding + noteStep * posInBar + noteStep * 0.3;
-        const noteStr = currentMelody[i];
-        let y = noteToY(noteStr);
+        const entry = currentMelody[i];
+        let noteStr = null;
+        let y = staffBottomY;
+        let isRestQ = false;
+        let isRestH = false;
+        let accidentalSymbol = null;
+        let isCont = false;
+
+        if (typeof entry === "string") {
+          if (entry === "R") {
+            isRestQ = true;
+            y = staffBottomY;
+          } else {
+            noteStr = entry;
+            y = noteToY(noteStr);
+          }
+        } else if (entry && typeof entry === "object") {
+          if (entry.t === "hn") {
+            noteStr = entry.note;
+            y = noteToY(noteStr);
+          } else if (entry.t === "hr") {
+            isRestH = true;
+            y = staffBottomY;
+          } else if (entry.t === "cont") {
+            isCont = true;
+          }
+        }
+
         if (y > maxNoteY) maxNoteY = y;
 
-        let accidentalSymbol = null;
-        if (noteStr !== "R") {
+        if (noteStr) {
           const m = noteStr.match(/^([A-G])([#b]?)(\d)$/);
           if (m) {
             const letter = m[1];
@@ -1739,7 +1972,7 @@
         if (i < realActive) state = "done";
         else if (i === realActive) state = "active";
 
-        positions.push({x, y, state, accidentalSymbol, noteStr});
+        positions.push({x, y, state, accidentalSymbol, noteStr, isRestQ, isRestH, isCont});
       }
 
       const baseTriY = staffBottomY + 20;
@@ -1759,18 +1992,30 @@
       drawStaffLines();
 
       for (let i = 0; i < positions.length; i++) {
-        const {x, y, state, accidentalSymbol, noteStr} = positions[i];
+        const {x, y, state, accidentalSymbol, noteStr, isRestQ, isRestH, isCont} = positions[i];
         let color = "#e2e8f0";
         if (state === "done") color = "#22c55e";
         else if (state === "active") color = "#eab308";
 
-        if (noteStr === "R") {
-          drawRest(x, y);
-        } else {
+        if (isCont) {
+          // no dibujamos nada
+        } else if (isRestQ) {
+          drawQuarterRest(x, y);
+        } else if (isRestH) {
+          drawHalfRest(x);
+        } else if (noteStr) {
           if (accidentalSymbol) {
             drawAccidental(accidentalSymbol, x - ACC_X_OFFSET, y);
           }
-          drawNoteHead(x, y, color);
+          // si esta posición corresponde a mitad de una blanca (t:cont) ya no estamos aquí
+          // así que sólo dibujamos
+          // si el entry original era "hn" → lo detectamos por buscar en currentMelody
+          const entry = currentMelody[i];
+          if (entry && typeof entry === "object" && entry.t === "hn") {
+            drawHalfNote(x, y, color);
+          } else {
+            drawNoteHead(x, y, color);
+          }
         }
       }
 
@@ -1828,13 +2073,36 @@
         ctx.fill();
       }
 
-      const noteForFret = currentMelody[ (activeOverrideIdx !== null) ? activeOverrideIdx : currentIndex ] || null;
+      const currentEntry = currentMelody[(activeOverrideIdx !== null) ? activeOverrideIdx : currentIndex] || null;
+      let noteForFret = null;
+      if (typeof currentEntry === "string" && currentEntry !== "R") {
+        noteForFret = currentEntry;
+      } else if (currentEntry && typeof currentEntry === "object" && currentEntry.t === "hn") {
+        noteForFret = currentEntry.note;
+      }
       drawFretboard(noteForFret);
     }
 
     function updateStatusForCurrent() {
-      const n = currentMelody[currentIndex] || "—";
-      statusEl.textContent = (n === "R") ? "Silencio" : ("Toca: " + n);
+      const entry = currentMelody[currentIndex];
+      if (!entry) {
+        statusEl.textContent = "—";
+        statusEl.className = "status mid";
+        return;
+      }
+      if (typeof entry === "string") {
+        if (entry === "R") {
+          statusEl.textContent = "Silencio";
+        } else {
+          statusEl.textContent = "Toca: " + entry;
+        }
+      } else if (entry.t === "hn") {
+        statusEl.textContent = "Toca (blanca): " + entry.note;
+      } else if (entry.t === "hr") {
+        statusEl.textContent = "Silencio (blanca)";
+      } else if (entry.t === "cont") {
+        statusEl.textContent = "—";
+      }
       statusEl.className = "status mid";
     }
 
@@ -1923,16 +2191,16 @@
       meterCtx.stroke();
     }
 
-    function scheduleRestAdvance() {
+    function scheduleRestAdvance(beats = 1) {
       if (restAdvanceTimer !== null) return;
       const noteMs = 60000 / currentBpm;
-      statusEl.textContent = "Silencio";
+      statusEl.textContent = beats === 1 ? "Silencio" : "Silencio (blanca)";
       statusEl.className = "status good";
       restAdvanceTimer = setTimeout(() => {
         advancing = true;
-        nextNote(noteMs);
+        nextNote(0);
         restAdvanceTimer = null;
-      }, noteMs);
+      }, noteMs * beats);
     }
 
     function listen() {
@@ -1952,8 +2220,18 @@
         drawMeter(0);
       }
 
-      if (!isPlaying && !advancing && currentMelody[currentIndex] === "R") {
-        scheduleRestAdvance();
+      const curEntry = currentMelody[currentIndex];
+
+      // avance automático de silencios
+      if (!isPlaying && !advancing) {
+        if (typeof curEntry === "string" && curEntry === "R") {
+          scheduleRestAdvance(1);
+        } else if (curEntry && typeof curEntry === "object" && curEntry.t === "hr") {
+          scheduleRestAdvance(2);
+        } else if (curEntry && typeof curEntry === "object" && curEntry.t === "cont") {
+          advancing = true;
+          nextNote(0);
+        }
       }
 
       if (micEnabled && !isPlaying && rms > noiseGate) {
@@ -1976,7 +2254,7 @@
     };
 
     function noteNameToFreq(noteStr) {
-      const m = noteStr.match(/^([A-G])([#b]?)(\d)$/);
+      const m = noteStr && typeof noteStr === "string" ? noteStr.match(/^([A-G])([#b]?)(\d)$/) : null;
       if (!m) return null;
       let [, letter, acc, octStr] = m;
       const octave = parseInt(octStr, 10);
@@ -1989,7 +2267,7 @@
     }
 
     function noteNameToMidi(noteStr) {
-      const m = noteStr.match(/^([A-G])([#b]?)(\d)$/);
+      const m = noteStr && typeof noteStr === "string" ? noteStr.match(/^([A-G])([#b]?)(\d)$/) : null;
       if (!m) return null;
       let [, letter, acc, octStr] = m;
       const octave = parseInt(octStr, 10);
@@ -2038,25 +2316,50 @@
     function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
 
     async function playOnce() {
-      const noteMs = 60000 / currentBpm;
+      const quarterMs = 60000 / currentBpm;
       for (let i = 0; i < currentMelody.length; i++) {
         if (playbackAbort) break;
-        const n = currentMelody[i];
+        const entry = currentMelody[i];
         drawAllBars(i, i);
-        if (n !== "R") {
-          const f = noteNameToFreq(n);
+        let durMs = quarterMs;
+        let isRest = false;
+        let playNote = null;
+        let chord = harmonyEnabled ? currentChords[i] : null;
+
+        if (typeof entry === "string") {
+          if (entry === "R") {
+            isRest = true;
+            durMs = quarterMs;
+          } else {
+            playNote = entry;
+          }
+        } else if (entry && typeof entry === "object") {
+          if (entry.t === "hn") {
+            playNote = entry.note;
+            durMs = quarterMs * 2;
+          } else if (entry.t === "hr") {
+            isRest = true;
+            durMs = quarterMs * 2;
+          } else if (entry.t === "cont") {
+            // no sonido
+          }
+        }
+
+        if (playNote) {
+          const f = noteNameToFreq(playNote);
           if (f) {
             ensureReverbNodes();
-            if (harmonyEnabled && currentChords[i]) {
-              playChordWithMelody(currentChords[i], f, noteMs/1000 * 0.85);
-              playOsc(f, noteMs/1000 * 0.85, 0.45);
+            if (chord) {
+              playChordWithMelody(chord, f, durMs/1000 * 0.85);
+              playOsc(f, durMs/1000 * 0.85, 0.45);
             } else {
-              playOsc(f, noteMs/1000 * 0.85, 0.4);
+              playOsc(f, durMs/1000 * 0.85, 0.4);
             }
           }
         }
+
         lastActiveTime = Date.now();
-        await sleep(noteMs);
+        await sleep(durMs);
       }
     }
 
@@ -2109,7 +2412,7 @@
     };
     loopBtn.onclick = () => {
       loopMode = !loopMode;
-      loopBtn.textContent = loopMode ? "Loop on" : "Loop off";
+      loopBtn.textContent = loopMode ? "Loop: on" : "Loop: off";
       saveSettings();
     };
 
@@ -2138,10 +2441,23 @@
 
     function checkNote(freq) {
       if (advancing || isPlaying) return;
-      const targetNote = currentMelody[currentIndex];
-      if (targetNote === "R") {
+      const entry = currentMelody[currentIndex];
+      if (!entry) return;
+
+      // si es continuación, avanzar
+      if (entry && typeof entry === "object" && entry.t === "cont") {
+        advancing = true;
+        nextNote(0);
         return;
       }
+
+      // si es silencio, no se compara
+      if (typeof entry === "string" && entry === "R") return;
+      if (entry && typeof entry === "object" && entry.t === "hr") return;
+
+      const targetNote = (typeof entry === "string") ? entry : (entry.note || null);
+      if (!targetNote) return;
+
       const targetFreq = noteNameToFreq(targetNote);
       if (!targetFreq) return;
       const MAX_CENTS = 30;
@@ -2228,7 +2544,27 @@
       return sampleRate / T0;
     }
 
-    // diapasón con afinación editable
+    function applyFretboardWidth() {
+      fretCanvas.width = fretboardWidth;
+      fretboardBox.style.width = (fretboardWidth + FRET_LEFT_COLUMN_WIDTH) + "px";
+      if (currentInstrument === "guitar") {
+        const entry = currentMelody[currentIndex];
+        let note = null;
+        if (typeof entry === "string" && entry !== "R") note = entry;
+        else if (entry && typeof entry === "object" && entry.t === "hn") note = entry.note;
+        drawFretboard(note);
+      }
+    }
+
+    if (fretWidthBtn) {
+      fretWidthBtn.addEventListener("click", () => {
+        fretboardWidthIndex = (fretboardWidthIndex + 1) % FRETBOARD_WIDTHS.length;
+        fretboardWidth = FRETBOARD_WIDTHS[fretboardWidthIndex];
+        applyFretboardWidth();
+        saveSettings();
+      });
+    }
+
     function drawFretboard(noteStr) {
       const w = fretCanvas.width;
       const h = fretCanvas.height;
@@ -2241,8 +2577,8 @@
       fretCtx.fillStyle = "rgba(15,23,42,.2)";
       fretCtx.fillRect(0,0,w,h);
 
-      const leftPad = 58;
-      const rightPad = 15;
+      const leftPad = FRET_CANVAS_LEFT_PAD;
+      const rightPad = FRET_CANVAS_RIGHT_PAD;
       const topPad = 10;
       const bottomPad = 10;
       const usableW = w - leftPad - rightPad;
@@ -2251,7 +2587,6 @@
       const stringsCount = 6;
       const stringSpacing = (h - topPad - bottomPad) / (stringsCount - 1);
 
-      // cuerdas
       for (let i = 0; i < stringsCount; i++) {
         const y = topPad + i * stringSpacing;
         fretCtx.strokeStyle = "rgba(226,232,240,.4)";
@@ -2262,7 +2597,6 @@
         fretCtx.stroke();
       }
 
-      // trastes
       for (let f = 0; f <= MAX_FRETS; f++) {
         const x = leftPad + f * fretW;
         fretCtx.strokeStyle = "rgba(226,232,240,.3)";
@@ -2280,20 +2614,10 @@
         }
       }
 
-      // recolocar selects en altura de cada cuerda
-      if (fretTuners && fretTuners.children.length === 6) {
-        for (let i = 0; i < 6; i++) {
-          const sel = fretTuners.children[i];
-          const y = topPad + i * stringSpacing;
-          sel.style.top = (y - 11) + "px";
-        }
-      }
-
-      // si no hay nota, solo texto
-      if (!noteStr || noteStr === "R") {
+      if (!noteStr) {
         fretCtx.fillStyle = "#94a3b8";
         fretCtx.font = "10px system-ui";
-        fretCtx.fillText("Diapasón (EADGBE)", 64, 12);
+        fretCtx.fillText("Diapasón", leftPad, 12);
         return;
       }
 
@@ -2319,7 +2643,6 @@
 
       fretCtx.fillStyle = "#94a3b8";
       fretCtx.font = "10px system-ui";
-      fretCtx.fillText("Diapasón (EADGBE)", 64, 12);
     }
 
     loadSettings();
